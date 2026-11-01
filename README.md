@@ -34,6 +34,11 @@ MortalidadEnColombia_web/
 └── docs/img/                                # Capturas de pantalla usadas en este README
 ```
 
+**Fuentes de datos**
+
+- `Anexo1`, `Anexo2` y `Divipola`: DANE, Estadísticas Vitales 2019 (defunciones no fetales), catálogo CIE‑10 y codificación DIVIPOLA.
+- `data/colombia_departamentos.geojson`: límites de los 33 departamentos de Colombia (incluido Bogotá D.C.), tomados del gist público [Colombia.geo.json de John Alexis Guerra Gómez](https://gist.github.com/john-guerra/43c7656821069d00dcbc). Se descargó desde [esta URL (raw)](https://gist.githubusercontent.com/john-guerra/43c7656821069d00dcbc/raw/be6a6e239cd5b5b803c6e7c2ec405b793a9064dd/Colombia.geo.json). Cada polígono tiene la propiedad `DPTO`, el código DANE de dos dígitos del departamento, que la app usa para unir el mapa con los datos de mortalidad.
+
 **Procesamiento de datos (`data_loader.py`)**
 
 - Lee los tres archivos de Excel la primera vez y guarda una copia en Parquet en `data/`; las siguientes ejecuciones cargan en segundos. Si se borran los `.parquet`, se regeneran solos.
@@ -83,8 +88,8 @@ MortalidadEnColombia_web/
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/<usuario>/MortalidadEnColombia_web.git
-cd MortalidadEnColombia_web
+git clone https://github.com/brayanestive18/MortalidadEnColombia_2019_dashboard.git
+cd MortalidadEnColombia_2019_dashboard
 
 # 2. Crear y activar un entorno virtual
 python3.13 -m venv .venv
@@ -111,6 +116,16 @@ La app se abre en <http://localhost:8501>.
 4. Cuando el build termine, Render publica la URL pública `https://<nombre-servicio>.onrender.com`.
 
 > En el plan gratuito el servicio se suspende tras un periodo de inactividad; la primera visita posterior tarda unos segundos en despertar.
+
+## Filtros interactivos
+
+Todas las visualizaciones comparten los mismos filtros, así que al elegir algo en un lugar se actualiza toda la página:
+
+- **Panel lateral:** departamento, mes, sexo, grupo de edad, manera de muerte y causa CIE‑10 (selección múltiple), más el botón **Limpiar filtros**.
+- **Clic en las gráficas:** el mapa filtra por departamento, la línea por mes, las barras apiladas por sexo, el histograma por grupo de edad y una fila de la tabla por causa. Un segundo clic en el mismo elemento quita el filtro.
+- Cada gráfica ignora su propio filtro para que se puedan seguir eligiendo opciones, y resalta lo seleccionado. Por ejemplo, el mapa sigue mostrando todos los departamentos y marca con borde grueso los elegidos.
+- La gráfica de ciudades más violentas siempre usa los homicidios X95, así que no aplica el filtro de causa.
+- Encima de los indicadores se muestra un resumen de los filtros activos.
 
 ## Visualizaciones y resultados
 
